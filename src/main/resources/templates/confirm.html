@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link data-th-href="@{/css/bg.css}" rel="stylesheet">
+    <link data-th-href="@{/css/styles.css}" rel="stylesheet">
+
+    <title>Secret Santa</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand">Secret Santa</span>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container text-center mt-5 white content">
+
+        <p>
+        <h5>Date of exchange:</h5>
+        <span data-th-text="${#dates.format(exchange.date, 'dd MMM yyyy')}"></span>
+        </p>
+
+        <p>
+        <h5>Budget:</h5>
+        <span data-th-if="${exchange.budget} > 0"
+            data-th-text="'$' + ${#numbers.formatDecimal(exchange.budget, 0, 2)}"></span>
+        <span data-th-unless="${exchange.budget} > 0">None</span>
+        </p>
+
+        <div data-th-if="${people} != null">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col"></th>
+                </thead>
+                <tbody>
+                    <tr data-th-each="person, iterStat : ${people}">
+                        <form method="POST" data-th-object="${person}">
+                            <input name="index" data-th-value="${iterStat.index}" hidden>
+                            <th scope="row" data-th-text="${iterStat.count}"></th>
+                            <td data-th-text="${person.name}"></td>
+                            <td data-th-text="${person.email}">
+                            </td>
+                            <td>
+                                <button type="submit" data-th-formaction="@{/santa/generate/edit}"
+                                    class="btn btn-light">Edit</button>
+                                <button type="submit" data-th-formaction="@{/santa/generate/remove}"
+                                    class="btn btn-danger">Remove</button>
+                            </td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-3">
+            <a class="btn btn-dark w-100 p-3" data-th-href="@{/santa/addNew}">Add Name</a>
+        </div>
+
+        <div class="alert alert-danger" data-th-if="${groupError}" data-th-text="${groupError}">
+        </div>
+
+        <div class="mb-3">
+            <br>
+            <hr><br>
+            <a style="font-size: x-large; font-weight: bold;" class="btn btn-outline-light w-50 p-4"
+                data-th-href="@{/email/send}">Generate Santas</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

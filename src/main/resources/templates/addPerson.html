@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link data-th-href="@{/css/bg.css}" rel="stylesheet">
+    <link data-th-href="@{/css/styles.css}" rel="stylesheet">
+
+    <title>Add Details</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand">Secret Santa</span>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container text-center mt-5 white content">
+
+        <form method="POST" data-th-action="@{/santa/generate/add}" data-th-object="${person}">
+
+            <label class="form-label" data-th-text="'Details of Person ' + ${i} + ':'"></label>
+            <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Name" data-th-field="*{name}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}">
+            </div>
+
+            <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Email" data-th-field="*{email}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('email')}" data-th-errors="*{email}">
+            </div>
+            <button type="submit" class="btn btn-outline-light">Add</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

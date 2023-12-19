@@ -1,0 +1,16 @@
+<p>Season's Greeting!</p>
+
+<br>
+
+<p>It's finally that time of the year for the holidays!</p>
+
+<p>You are now part of a Christmas gift exchange on __date__ with __budget__ budget. A separate email will be sent with more information.</p>
+
+<p>Stay tuned!</p>
+
+<br><br><br>
+
+<hr>
+<i>This is an auto-generated email, do not reply to this email.</i>
+
+ 

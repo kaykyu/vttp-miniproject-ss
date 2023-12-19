@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link data-th-href="@{/css/snow.css}" rel="stylesheet">
+    <link data-th-href="@{/css/bg.css}" rel="stylesheet">
+    <link data-th-href="@{/css/styles.css}" rel="stylesheet">
+
+    <title>Secret Santa</title>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand">Welcome, <span data-th-text="${santa}"></span></span>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                        data-th-href="@{/wishlist/{gID}/{pID}(gID=${groupId}, pID=${personId})}">Wishlist</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="text-center mt-5" data-th-if="${reveal} == null">
+        <p>
+        <form method="POST" data-th-action="@{/show/{gID}/{pID}/reveal(gID=${groupId}, pID=${personId})}">
+            <button style="font-size: x-large; font-weight: bold;" type="submit"
+                class="btn btn-outline-light w-25 p-4">REVEAL
+                SECRET</button>
+        </form>
+        </p>
+    </div>
+
+    <div class="container text-center mt-5 white content" data-th-if="${reveal} != null">
+
+        <span>You are gifting to:</span>
+        <h2 data-th-text="${santee}"></h2>
+
+        <div class="mb-3" data-th-if="${santeeList} != null">
+            <hr><br>
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Wishlist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-th-each="item, iterStat : ${santeeList}">
+                        <th scope="row" data-th-text="${iterStat.count}"></th>
+                        <td>
+                            <span data-th-if="${#strings.equals(item.toString(), 'isProduct')}"><a
+                                    data-th-href="*{item.itemUrl}"><span data-th-text="*{item.title}"></span></a></span>
+                            <span data-th-unless="${#strings.equals(item.toString(), 'isProduct')}"
+                                data-th-text="${item}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-3" data-th-if="${santeeList} == null">
+            <hr><br>
+            <span data-th-text="${santee}"></span> has not added anything to their wishlist.
+        </div>
+    </div>
+
+    <div class="snow-ball-container">
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+        <div class="snow-ball"></div>
+    </div>
+
+</body>
+
+</html>

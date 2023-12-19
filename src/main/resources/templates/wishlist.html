@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link data-th-href="@{/css/bg.css}" rel="stylesheet">
+    <link data-th-href="@{/css/styles.css}" rel="stylesheet">
+
+    <title>Wishlist</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <span class="navbar-brand"><span data-th-text="${santa}"></span>'s Wishlist</span>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link active" aria-current="page"
+                        data-th-href="@{/show/{gID}/{pID}(gID=${groupId}, pID=${personId})}">Back</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container text-center mt-5 white content">
+
+        <div data-th-if="${wishlist} == null">You have not added anything to your wishlist.</div>
+
+        <div data-th-if="${wishlist} != null">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Items</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-th-each="wish, iterStat : ${wishlist}">
+                        <th scope="row" data-th-text="${iterStat.count}"></th>
+                        <form method="POST"
+                            data-th-action="@{/wishlist/{gID}/{pID}/delete(gID=${groupId}, pID=${personId})}">
+                            <input name="wish" data-th-value="${iterStat.index}" hidden>
+                            <td>
+                                <span data-th-if="${#strings.equals(wish.toString(), 'isProduct')}"><a
+                                        data-th-href="*{wish.itemUrl}"><span
+                                            data-th-text="*{wish.title}"></span></a></span>
+                                <span data-th-unless="${#strings.equals(wish.toString(), 'isProduct')}"
+                                    data-th-text="${wish}"></span>
+                            </td>
+                            <td><button type="submit" class="btn btn-danger">Delete</button></td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div data-th-if="${edit} == null">
+            <br>
+            <br>
+            <a class="btn btn-outline-light"
+                data-th-href="@{/wishlist/{gID}/{pID}/edit(gID=${groupId}, pID=${personId})}">
+                Update your wishlist</a>
+        </div>
+
+        <div data-th-if="${edit} != null">
+            <hr>
+            <br>
+            <form method="POST" data-th-action="@{/wishlist/{gID}/{pID}(gID=${groupId}, pID=${personId})}">
+                <label class="form-label" for="wish">Enter into your wishlist</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="wish" placeholder="I want this">
+                </div>
+                <button type="submit" class="btn btn-outline-light">Add to Wishlist</button>
+            </form>
+
+            <br>
+            <br>
+            <form method="GET" data-th-action="@{/wishlist/{gID}/{pID}/search(gID=${groupId}, pID=${personId})}">
+                <label class="form-label" for="q">Search for specific products</label>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="q">
+                </div>
+                <button type="submit" class="btn btn-light">Search</button>
+
+
+            </form>
+
+            <div data-th-if="${products} != null">
+                <br>
+                <br>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <th scope="col">#</th>
+                        <th scope="col"></th>
+                        <th scope="col">Search results</th>
+                        <th scope="col"></th>
+                    </thead>
+                    <tbody>
+                        <tr data-th-each="product, iterStat : ${products}">
+                            <form method="POST"
+                                data-th-action="@{/wishlist/{gID}/{pID}/search/add(gID=${groupId}, pID=${personId})}">
+                                <input name="title" data-th-value="*{product.title}" hidden>
+                                <input name="itemUrl" data-th-value="*{product.itemUrl}" hidden>
+                                <input name="image" data-th-value="*{product.image}" hidden>
+
+                                <th scope="row" data-th-text="${iterStat.count}"></th>
+                                <td><img data-th-src="*{product.image}" width="100px"></td>
+                                <td><a data-th-href="*{product.itemUrl}"><span
+                                            data-th-text="*{product.title}"></span></a>
+                                </td>
+                                <td><button type="submit" class="btn btn-outline-light">Add to Wishlist</button></td>
+                            </form>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<p>Greetings __name__!</p>
+
+<br>
+
+<p>The person you are gifting to is...</p>
+
+
+<p><h1>__santee__</h1></p>
+
+
+<p>Here is the <a href="__link__">link</a> to access the Secret Santa page, where you can check your drawn name and add a wishlist.</p>
+
+<p>Have fun!</p>
+
+<br><br><br>
+
+<hr>
+<i>This is an auto-generated email, do not reply to this email.</i>
+
+ 
