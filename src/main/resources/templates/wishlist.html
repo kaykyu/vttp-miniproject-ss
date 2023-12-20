@@ -86,8 +86,12 @@
                 </div>
                 <button type="submit" class="btn btn-light">Search</button>
 
-
             </form>
+
+            <div data-th-if="${searchError} != null">
+                <br>
+                <p data-th-text="${searchError}"></p>
+            </div>
 
             <div data-th-if="${products} != null">
                 <br>

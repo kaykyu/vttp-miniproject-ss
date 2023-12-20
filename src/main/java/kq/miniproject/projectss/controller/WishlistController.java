@@ -1,5 +1,7 @@
 package kq.miniproject.projectss.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,8 +122,14 @@ public class WishlistController {
         mav.addObject("personId", personId);
         mav.addObject("wishlist", wlSvc.accessWishlist(person, null));
         mav.addObject("edit", true);
-        mav.addObject("products", wlSvc.getProducts(search));
 
+        List<Product> products = wlSvc.getProducts(search);
+        if (products == null) {
+            mav.addObject("searchError", "No products found. Please try again.");
+            return mav;
+        }
+
+        mav.addObject("products", products);
         return mav;
     }
 

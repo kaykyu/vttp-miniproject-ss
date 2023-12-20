@@ -62,18 +62,24 @@ public class WishlistService {
 
         response = template.exchange(request, String.class);
         JsonReader jReader = Json.createReader(new StringReader(response.getBody()));
-        JsonArray products = jReader.readObject().get("result").asJsonObject().get("resultList").asJsonArray();
-        List<Product> productList = new ArrayList<>();
 
-        for (JsonValue product : products) {
+        try {
+            JsonArray products = jReader.readObject().get("result").asJsonObject().get("resultList").asJsonArray();
+            List<Product> productList = new ArrayList<>();
 
-            JsonObject item = product.asJsonObject().get("item").asJsonObject();
-            productList.add(new Product(
-                    item.getString("title"),
-                    item.getString("itemUrl"),
-                    item.getString("image")));
+            for (JsonValue product : products) {
+
+                JsonObject item = product.asJsonObject().get("item").asJsonObject();
+                productList.add(new Product(
+                        item.getString("title"),
+                        item.getString("itemUrl"),
+                        item.getString("image")));
+            }
+
+            return productList;
+            
+        } catch (Exception e) {
+            return null;
         }
-        
-        return productList;
     }
 }
