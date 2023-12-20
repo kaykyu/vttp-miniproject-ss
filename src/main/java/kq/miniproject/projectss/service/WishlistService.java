@@ -77,8 +77,9 @@ public class WishlistService {
             }
 
             return productList;
-            
+
         } catch (Exception e) {
+            System.out.println(response.getBody());
             return null;
         }
     }
