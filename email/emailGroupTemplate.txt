@@ -1,4 +1,4 @@
-<p>Season's Greeting!</p>
+<p>Season's Greetings!</p>
 
 <br>
 

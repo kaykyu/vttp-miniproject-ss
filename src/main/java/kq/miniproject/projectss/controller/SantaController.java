@@ -92,6 +92,8 @@ public class SantaController {
 
         if (binding.hasErrors()) {
             mav.setViewName("editPerson");
+            Integer index = Integer.parseInt(payload.getFirst("index"));
+            mav.addObject("i", index + 1);
             return mav;
         }
 
