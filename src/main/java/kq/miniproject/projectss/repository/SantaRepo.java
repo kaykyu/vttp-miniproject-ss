@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,9 +41,6 @@ public class SantaRepo {
     @Autowired
     @Qualifier("exchangeRedisTemplate")
     private RedisTemplate<String, Object> exchangeTemplate;
-
-    @Resource(name = "errorRedisTemplate")
-    private HashOperations<String, String, String> errorHashOps;
 
     public Date getExpiry(Date date) {
 
@@ -117,11 +113,5 @@ public class SantaRepo {
     public void removePerson(String id, Long index) {
         personListOps.set(id, index, null);
         personListOps.remove(id, 0, null);
-    }
-
-    public String saveError(String message) {
-        String id = UUID.randomUUID().toString();
-        errorHashOps.put("error", id, message);
-        return id;
     }
 }

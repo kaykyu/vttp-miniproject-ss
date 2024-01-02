@@ -43,11 +43,9 @@ public class EmailController {
         } catch (Exception e) {
             mav.setViewName("emailError");
             stSvc.removeGroup(id);
-            mav.addObject("error", mailSvc.generateError(e.getMessage()));
             return mav;
         }
-        
-        
+
         return mav;
     }
 }

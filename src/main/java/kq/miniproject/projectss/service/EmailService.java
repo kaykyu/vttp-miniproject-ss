@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.resend.Resend;
-import com.resend.services.emails.model.SendEmailRequest;
-import com.resend.services.emails.model.SendEmailResponse;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Personalization;
 
 import kq.miniproject.projectss.model.Email;
 import kq.miniproject.projectss.model.Person;
@@ -29,13 +33,13 @@ public class EmailService {
     @Autowired
     SantaRepo repo;
 
-    @Value("${resend.email.apiKey}")
-    String apiKey;
-
     @Value("${webapp.host.url}")
     String hostUrl;
 
-    private final static String fromEmail = "Secret Santa <noreply@resend.dev>";
+    @Value("${sendgrid.email.apiKey}")
+    String sendgridKey;
+
+    private final static String fromEmail = "kaykyu8080@gmail.com";
     private final static List<String> groupTemplateVariables = new ArrayList<>(List.of("__date__", "__budget__"));
     private final static List<String> emailTemplateVariables = new ArrayList<>(
             List.of("__name__", "__santee__", "__link__"));
@@ -55,41 +59,57 @@ public class EmailService {
 
     public void sendGroupMail(String id) throws Exception {
 
-        String message = generateGroupMail(id);
+        Mail mail = new Mail();
+        mail.setFrom(new com.sendgrid.helpers.mail.objects.Email(fromEmail, "Secret Santa"));
+        mail.setSubject("Christmas Gift Exchange");
+
         List<Person> people = repo.getGroup(id);
-        String[] toMailAdds = new String[people.size()];
-
+        Personalization toMailAdds = new Personalization();
         for (int i = 0; i < people.size(); i++) {
-            toMailAdds[i] = people.get(i).getEmail();
+            toMailAdds.addTo(new com.sendgrid.helpers.mail.objects.Email(people.get(i).getEmail()));
         }
+        mail.addPersonalization(toMailAdds);
+        mail.addContent(new Content("text/html", generateGroupMail(id)));
 
-        Resend resend = new Resend(apiKey);
-        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-                .from(fromEmail)
-                .to(toMailAdds)
-                .subject("Christmas Gift Exchange")
-                .html(message)
-                .build();
+        SendGrid sg = new SendGrid(sendgridKey);
+        Request request = new Request();
+        request.setMethod(Method.POST);
+        request.setEndpoint("mail/send");
+        request.setBody(mail.build());
+        Response response = sg.api(request);
 
-        SendEmailResponse data = resend.emails().send(sendEmailRequest);
-        System.out.println(data.getId());
+        switch (response.getStatusCode()) {
+            case 202:
+                break;
+            default:
+                throw new Exception("SendGrid Email API error");
+        }
     }
 
     public void sendEmail(List<Email> emails) throws Exception {
 
-        Resend resend = new Resend(apiKey);
+        for (Email email : emails) {
 
-        for (Email mail : emails) {
+            com.sendgrid.helpers.mail.objects.Email from = new com.sendgrid.helpers.mail.objects.Email(fromEmail,
+                    "Secret Santa");
+            com.sendgrid.helpers.mail.objects.Email to = new com.sendgrid.helpers.mail.objects.Email(
+                    email.getSendTo().getEmail());
+            Content content = new Content("text/html", email.getMessage());
+            Mail mail = new Mail(from, "Christmas Gift Exchange - Secret Santa", to, content);
 
-            SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-                    .from(fromEmail)
-                    .to(mail.getSendTo().getEmail())
-                    .subject("Christmas Gift Exchange - Secret Santa")
-                    .html(mail.getMessage())
-                    .build();
+            SendGrid sg = new SendGrid(sendgridKey);
+            Request request = new Request();
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sg.api(request);
 
-            SendEmailResponse data = resend.emails().send(sendEmailRequest);
-            System.out.println(data.getId());
+            switch (response.getStatusCode()) {
+                case 202:
+                    break;
+                default:
+                    throw new Exception("SendGrid Email API error");
+            }
         }
     }
 
@@ -117,7 +137,7 @@ public class EmailService {
                         })
                         .collect(Collectors.joining());
 
-                emails.add(new Email(santa.get(person), message));
+                emails.add(new Email(person, message));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -133,8 +153,8 @@ public class EmailService {
         Date date = repo.getExchange(id).getDate();
         String dateString = dateFormat.format(date);
 
-        String budget = "$%.2f".formatted(repo.getExchange(id).getBudget());
-        if (budget.equals("$0.00")) {
+        String budget = "a $%.2f".formatted(repo.getExchange(id).getBudget());
+        if (budget.equals("a $0.00")) {
             budget = "no";
         }
 
@@ -160,9 +180,5 @@ public class EmailService {
         }
 
         return result;
-    }
-
-    public String generateError(String message) {
-        return repo.saveError(message);
     }
 }

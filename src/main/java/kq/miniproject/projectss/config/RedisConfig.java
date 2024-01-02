@@ -36,9 +36,6 @@ public class RedisConfig {
     @Value("${spring.redis.database.wishlist}")
     private Integer redisWishlistDatabase;
 
-    @Value("${spring.redis.database.error}")
-    private Integer redisErrorDatabase;
-
     @Bean
     public RedisTemplate<String, Object> personRedisTemplate() {
 
@@ -134,34 +131,6 @@ public class RedisConfig {
 
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisFac);
-
-        return template;
-    }
-
-    @Bean
-    public RedisTemplate<String, String> errorRedisTemplate() {
-
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(redisHost);
-        config.setPort(redisPort);
-        config.setDatabase(redisErrorDatabase);
-
-        if (!"NOT_SET".equals(redisUser.trim())) {
-            config.setUsername(redisUser);
-            config.setPassword(redisPassword);
-        }
-
-        JedisClientConfiguration jedisClient = JedisClientConfiguration.builder().build();
-        JedisConnectionFactory jedisFac = new JedisConnectionFactory(config, jedisClient);
-        jedisFac.afterPropertiesSet();
-
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisFac);
-
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new StringRedisSerializer());
 
         return template;
     }
