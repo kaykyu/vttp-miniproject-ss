@@ -25,26 +25,24 @@
     </nav>
 
     <div class="container text-center mt-5 white content">
-        <div data-th-if="${exchange} != null">
-            <form method="POST" data-th-action="@{/santa/generate}" data-th-object="${exchange}">
+        <form method="POST" data-th-action="@{/santa/generate}" data-th-object="${exchange}">
 
-                <div class="mb-3">
-                    <label class="form-label">Date of Exchange:</label>
-                    <input type="date" class="form-control" data-th-field="*{date}" />
-                </div>
-                <div class="alert alert-danger" data-th-if="${#fields.hasErrors('date')}" data-th-errors="*{date}">
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Date of Exchange:</label>
+                <input type="date" class="form-control" data-th-field="*{date}"/>
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('date')}" data-th-errors="*{date}">
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Budget: <i>(Input 0 for no budget)</i></label>
-                    <input type="number" class="form-control" data-th-field="*{budget}" />
-                </div>
-                <div class="alert alert-danger" data-th-if="${#fields.hasErrors('budget')}" data-th-errors="*{budget}">
-                </div>
+            <div class="mb-3">
+                <label class="form-label">Budget: <i>(Input 0 for no budget)</i></label>
+                <input type="number" class="form-control" data-th-field="*{budget}"/>
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('budget')}" data-th-errors="*{budget}">
+            </div>
 
-                <button type="submit" class="btn btn-outline-light">Next</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-outline-light">Next</button>
+        </form>
     </div>
 
 </body>

@@ -25,7 +25,7 @@ public class PickController {
 
             if (pax < 3 || pax > 20) {                
                 model.addAttribute("hasErrors", true);
-                model.addAttribute("error", "Number of people must be between 3 and 20");
+                model.addAttribute("error", "Number of gifts must be between 3 and 20");
                 return "pick";
             }
 

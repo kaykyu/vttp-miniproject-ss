@@ -40,6 +40,7 @@ public class SantaController {
 
         ModelAndView mav = new ModelAndView("santa");
         if (binding.hasErrors()) {
+            mav.setViewName("exchange");
             return mav;
         }
         if (session.getAttribute("id") == null) {
